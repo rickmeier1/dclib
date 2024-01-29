@@ -11,7 +11,15 @@ project(cdlib VERSION 0.1.0 LANGUAGES C CXX)
 include(CTest)
 enable_testing()
 
-add_executable(dclib main.cpp)
+add_executable(dclib src/main.cpp)
+
+
+target_include_directories(dclib PUBLIC include)
+target_sources(dclib PUBLIC src/book-info.cpp)
+
+add_subdirectory(extern/cxxopts)
+target_include_directories(dclib PUBLIC cxxopts)
+target_link_libraries(dclib PUBLIC cxxopts)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
