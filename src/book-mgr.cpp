@@ -9,7 +9,8 @@ BookManager::BookManager() {
 }
 
 void BookManager::loadBooks() {
-    cerr << "BookManager::loadBooks unimplemented" << endl;
+    auto book1 = shared_ptr<BookInfo>(BookInfo::create("Harry Potter and the Philosopher's Stone", "J.K. Rowling"));
+    addBook(book1);
 }
 
 BookManager &BookManager::getInstance() {
@@ -17,28 +18,45 @@ BookManager &BookManager::getInstance() {
     return instance;
 }
 
-
 vector<shared_ptr<BookInfo>> BookManager::getBooks() {
-    cerr << "BookManager::getBooks unimplemented" << endl;
-    return vector<shared_ptr<BookInfo>>();
+    vector<shared_ptr<BookInfo>> list;
+    for (auto &book : books) {
+        list.push_back(book.second);
+    }
+    return list;
 }
 
 shared_ptr<BookInfo> BookManager::getBookByTitle(string title) {
-    cerr << "BookManager::getBookByTitle unimplemented" << endl;
-    return nullptr;
+    auto book = books[title];
+    return book;
 }
 
 bool BookManager::addBook(shared_ptr<BookInfo> book) {
-    cerr << "BookManager::addBook unimplemented" << endl;
-    return false;
+    books[book->getTitle()] = book;
+    return true;
 };
 
 bool BookManager::removeBook(string title) {
-    cerr << "BookManager::removeBook unimplemented" << endl;
-    return false;
+    auto pos = books.find(title);
+    if (pos == books.end()) {
+        return false;
+    }
+    books.erase(pos);
+    return true;
 };
 
 bool BookManager::updateBook(std::string lookupTitle, const std::string *title, const std::string *author, const std::string *summary, const std::string *isbn) {
-    cerr << "BookManager::updateBook unimplemented" << endl;
-    return false;
+    auto pos = books.find(lookupTitle);
+    if (pos == books.end()) {
+        return false;
+    }
+    auto book = pos->second;
+    books.erase(pos);
+
+    std::string oldSummary = book->getSummary();
+    std::string oldISBN = book->getISBN();
+    auto newBookInfo = shared_ptr<BookInfo>(BookInfo::create(title?*title:book->getTitle(), author?*author:book->getAuthor(), summary?summary:&oldSummary, isbn?isbn:&oldISBN));
+    books[newBookInfo->getTitle()] = book;
+
+    return true;
 };

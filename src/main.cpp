@@ -56,9 +56,6 @@ int main(int argc, char const **argv) {
 bool handleOptions(cxxopts::ParseResult &result) {
     BookManager &bm = BookManager::getInstance();
 
-    auto book1 = shared_ptr<BookInfo>(BookInfo::create("Harry Potter and the Philosopher's Stone", "J.K. Rowling"));
-    bm.addBook(book1);
-
     if (result.count("list")) {
         auto books = bm.getBooks();
         for (auto &book : books) {
@@ -86,7 +83,7 @@ bool handleOptions(cxxopts::ParseResult &result) {
     }
 
     if (result.count("retrieve")) {
-        auto title = result["opt"].as<string>();
+        auto title = result["retrieve"].as<string>();
         auto book = bm.getBookByTitle(title);
         if (!book) {
             cerr << title << " not found" << endl;
@@ -105,7 +102,7 @@ bool handleOptions(cxxopts::ParseResult &result) {
             cerr << "Error: title, author, summary or ISBN required for update" << endl;
             return false;
         }
-        auto title = result["opt"].as<string>();
+        auto title = result["update"].as<string>();
         BookValues bookValues(result);
 
         if (!bm.updateBook(title, bookValues.pTitle, bookValues.pAuthor, bookValues.pSummary, bookValues.pISBN)) {
@@ -123,7 +120,7 @@ bool handleOptions(cxxopts::ParseResult &result) {
             return false;
         }
 
-        auto title = result["opt"].as<string>();
+        auto title = result["delete"].as<string>();
         if (!bm.removeBook(title)) {
             cerr << title << " not found" << endl;
             return false;
