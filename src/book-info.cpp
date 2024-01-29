@@ -3,8 +3,8 @@
 
 using namespace std;
 
-BookInfo* BookInfo::create(string title, string author, string summary, string isbn) {
-    return new BookInfo(title, author, summary, isbn);
+BookInfo* BookInfo::create(string title, string author, const std::string *pSummary, const std::string *pISBN) {
+    return new BookInfo(title, author, pSummary?*pSummary:"", pISBN?*pISBN:"");
 }
 
 BookInfo::BookInfo(string title, string author, string summary, string isbn) {

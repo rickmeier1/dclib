@@ -15,7 +15,7 @@ add_executable(dclib src/main.cpp)
 
 
 target_include_directories(dclib PUBLIC include)
-target_sources(dclib PUBLIC src/book-info.cpp)
+target_sources(dclib PUBLIC src/book-info.cpp src/book-mgr.cpp)
 
 add_subdirectory(extern/cxxopts)
 target_include_directories(dclib PUBLIC cxxopts)
