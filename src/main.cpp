@@ -30,14 +30,14 @@ int main(int argc, char const **argv) {
     options.add_options("main")
         ("l,list", "List books in library")
         ("c,create", "Create a new book, see create options [-t,-a required]")
-        ("r,retrieve", "Retrieve info on a book [title]", cxxopts::value<string>())
-        ("u,update", "Update a book [title], use -t,-a,-s,-i for updated fields",cxxopts::value<string>())
-        ("d,delete", "Delete a book [title]", cxxopts::value<string>());
+        ("r,retrieve", "Retrieve info on a book", cxxopts::value<string>(), "title")
+        ("u,update", "Update a book, use create options -t,-a,-s,-i to indicate update fields",cxxopts::value<string>(), "title")
+        ("d,delete", "Delete a book", cxxopts::value<string>(), "title");
     options.add_options("create")
-        ("t,title", "Book title", cxxopts::value<string>())
-        ("a,author", "Book author", cxxopts::value<string>())
-        ("s,summary", "Book summary", cxxopts::value<string>())
-        ("i,isbn", "Book ISBN", cxxopts::value<string>());
+        ("t,title", "Book title", cxxopts::value<string>(), "title")
+        ("a,author", "Book author", cxxopts::value<string>(), "author")
+        ("s,summary", "Book summary", cxxopts::value<string>(), "summary")
+        ("i,isbn", "Book ISBN", cxxopts::value<string>(), "isbn");
     vector<string> allOptions = {"main","create"};
 
     try {
