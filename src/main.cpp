@@ -115,11 +115,6 @@ bool handleOptions(cxxopts::ParseResult &result) {
     }
 
     if (result.count("delete")) {
-        if (!result.count("title") && !result.count("author")) {
-            cerr << "Error: title and author required" << endl;
-            return false;
-        }
-
         auto title = result["delete"].as<string>();
         if (!bm.removeBook(title.c_str())) {
             cerr << title << " not found" << endl;
