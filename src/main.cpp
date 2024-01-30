@@ -12,16 +12,16 @@ using namespace std;
 bool handleOptions(cxxopts::ParseResult &result);
 
 struct BookValues {
-    const string *pTitle;
-    const string *pAuthor;
-    const string *pSummary;
-    const string *pISBN;
+    string title;
+    string author;
+    string summary;
+    string isbn;
 
     BookValues(cxxopts::ParseResult &result) {
-        pTitle = result.count("title") ? &result["title"].as<string>() : nullptr;
-        pAuthor = result.count("author") ? &result["author"].as<string>() : nullptr;
-        pSummary = result.count("summary") ? &result["summary"].as<string>() : nullptr;
-        pISBN = result.count("isbn") ? &result["isbn"].as<string>() : nullptr;
+        title = result.count("title") ? result["title"].as<string>() : "";
+        author = result.count("author") ? result["author"].as<string>() : "";
+        summary = result.count("summary") ? result["summary"].as<string>() : "";
+        isbn = result.count("isbn") ? result["isbn"].as<string>() : "";
     }
 };
 
@@ -71,20 +71,20 @@ bool handleOptions(cxxopts::ParseResult &result) {
         }
 
         BookValues bookValues(result);
-        shared_ptr<BookInfo> book(BookInfo::create(*bookValues.pTitle, *bookValues.pAuthor, bookValues.pSummary, bookValues.pISBN));
+        shared_ptr<BookInfo> book(BookInfo::create(bookValues.title.c_str(), bookValues.author.c_str(), bookValues.summary.c_str(), bookValues.isbn.c_str()));
 
         if (!bm.addBook(book)) {
-            cerr << *bookValues.pTitle << " not found" << endl;
+            cerr << bookValues.title << " not found" << endl;
             return false;
         }
 
-        cerr << *bookValues.pTitle << " added" << endl;
+        cerr << bookValues.title << " added" << endl;
         return true;
     }
 
     if (result.count("retrieve")) {
         auto title = result["retrieve"].as<string>();
-        auto book = bm.getBookByTitle(title);
+        auto book = bm.getBookByTitle(title.c_str());
         if (!book) {
             cerr << title << " not found" << endl;
             return false;
@@ -105,7 +105,7 @@ bool handleOptions(cxxopts::ParseResult &result) {
         auto title = result["update"].as<string>();
         BookValues bookValues(result);
 
-        if (!bm.updateBook(title, bookValues.pTitle, bookValues.pAuthor, bookValues.pSummary, bookValues.pISBN)) {
+        if (!bm.updateBook(title.c_str(), bookValues.title.c_str(), bookValues.author.c_str(), bookValues.summary.c_str(), bookValues.isbn.c_str())) {
             cerr << title << " not found" << endl;
             return false;
         }
@@ -121,7 +121,7 @@ bool handleOptions(cxxopts::ParseResult &result) {
         }
 
         auto title = result["delete"].as<string>();
-        if (!bm.removeBook(title)) {
+        if (!bm.removeBook(title.c_str())) {
             cerr << title << " not found" << endl;
             return false;
         }
